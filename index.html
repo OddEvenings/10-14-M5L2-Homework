@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5.2 Homework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#fff; --ink:#1f2a37; --muted:#5b6777; --line:#d6dde6;
+    --brand:#2563eb; --brand-ink:#fff;
+    --a:#bfdbfe; --a-strong:#3b82f6; --b:#fed7aa; --b-strong:#f97316;
+    --ok:#15803d; --ok-bg:#dcfce7; --bad:#b91c1c; --bad-bg:#fee2e2; --warn-bg:#fef9c3; --warn:#854d0e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Lexend,system-ui,sans-serif;font-size:20px;line-height:1.5}
+  header{background:var(--brand);color:var(--brand-ink);padding:20px 16px}
+  header .wrap{max-width:860px;margin:0 auto}
+  header h1{margin:0;font-size:1.5em;line-height:1.2}
+  header p{margin:4px 0 0;opacity:.9;font-size:.85em}
+  main{max-width:860px;margin:0 auto;padding:16px}
+  .top{background:var(--card);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+  .top label{font-weight:600}
+  .top input{font:inherit;padding:8px 12px;border:2px solid var(--line);border-radius:10px;min-width:220px}
+  .status{margin-left:auto;font-weight:700;color:var(--muted)}
+  .status.done{color:var(--ok)}
+  .banner{display:none;background:var(--ok-bg);color:var(--ok);border-radius:14px;padding:16px;margin-bottom:16px;font-weight:700;font-size:1.1em;text-align:center}
+  .banner.show{display:block}
+  .banner .big{font-size:1.8em;display:block;line-height:1.2}
+  h2.section{font-size:1.15em;margin:28px 0 10px;color:var(--brand)}
+  .q{background:var(--card);border-radius:14px;padding:18px 16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);border-left:6px solid var(--line);position:relative}
+  .q.right{border-left-color:var(--ok)}
+  .q.wrong{border-left-color:var(--bad)}
+  .mark{display:none;position:absolute;top:14px;right:14px;font-weight:700;border-radius:99px;padding:2px 12px;font-size:.8em}
+  .q.right .mark{display:block;background:var(--ok-bg);color:var(--ok)}
+  .q.wrong .mark{display:block;background:var(--bad-bg);color:var(--bad)}
+  .qhead{display:flex;gap:10px;align-items:baseline;margin-bottom:10px;padding-right:110px}
+  .num{background:var(--ink);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;flex:none}
+  .prompt{font-weight:600}
+  input.box, select.box{font:inherit;font-size:1em;width:4.2em;padding:4px 6px;border:2px solid var(--line);border-radius:8px;text-align:center}
+  input.box.wide{width:7em}
+  select.box{width:auto;text-align:left}
+  input.box:focus, select.box:focus{outline:none;border-color:var(--brand)}
+  input:disabled, select:disabled{background:#f3f4f6;color:var(--ink)}
+  .grid{display:grid;gap:0;border:2px solid #374151;margin:10px 0 14px;max-width:100%;cursor:pointer;user-select:none;touch-action:manipulation}
+  .grid .c{aspect-ratio:1;border-right:1px solid #9ca3af;border-bottom:1px solid #9ca3af;background:#fff}
+  .grid .c.a{background:var(--a)} .grid .c.b{background:var(--b)}
+  .grid .c.split{border-right:3px solid #111827}
+  .grid.locked{cursor:default}
+  .tip{color:var(--muted);font-size:.8em;margin:0}
+  .eqs{display:grid;gap:8px}
+  .eq{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .chip{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:4px;vertical-align:middle}
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;align-items:center;gap:10px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;cursor:pointer}
+  .opt input{width:22px;height:22px}
+  .opts.pics{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .opt svg{max-width:100%;height:auto}
+  .add{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.1em;line-height:1.4;display:inline-block;text-align:right;margin:6px 0}
+  .add .rule{border-top:2px solid var(--ink)}
+  svg.blocks{max-width:100%;height:auto;display:block;margin:8px 0}
+  .turnin{background:var(--card);border-radius:14px;padding:20px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08);border-left:6px solid var(--brand);text-align:center}
+  .turnin p{margin:0 0 12px}
+  button.go{font:inherit;font-weight:700;font-size:1.1em;background:var(--brand);color:#fff;border:0;border-radius:12px;padding:12px 28px;cursor:pointer}
+  button.go:disabled{background:#9ca3af;cursor:default}
+  .msg{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:.92em;display:none;text-align:left}
+  .msg.warn{display:block;background:var(--warn-bg);color:var(--warn)}
+  .confirm{display:none;margin-top:14px;padding:14px;border-radius:10px;background:var(--warn-bg);color:var(--warn);text-align:left}
+  .confirm.show{display:block}
+  .confirm .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .confirm button{font:inherit;font-weight:700;border-radius:10px;padding:8px 18px;cursor:pointer;border:2px solid var(--warn)}
+  .confirm .yes{background:var(--warn);color:#fff}
+  .confirm .no{background:#fff;color:var(--warn)}
+  table.sum{width:100%;border-collapse:collapse;font-size:.85em;margin-top:12px;text-align:left}
+  table.sum th, table.sum td{border-bottom:1px solid var(--line);padding:6px 8px}
+  .good{color:var(--ok);font-weight:700} .badc{color:var(--bad);font-weight:700}
+  footer{color:var(--muted);font-size:.75em;text-align:center;padding:20px 16px 40px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Lesson 5.2 Homework</h1>
+  <p>Use Area Models and the Distributive Property to Multiply · Grade 4</p>
+</div></header>
+
+<main>
+  <div class="top">
+    <div><label for="name">Your name:</label> <input id="name" autocomplete="off" placeholder="Type your full name"></div>
+    <div class="status" id="status">Not turned in yet</div>
+  </div>
+
+  <div class="banner" id="banner"></div>
+
+  <h2 class="section">Area Models</h2>
+
+  <div class="q" data-id="1">
+    <div class="qhead"><span class="num">1</span><span class="prompt">How can you represent the product on the grid? &nbsp; 7 × 18 = <span class="total-show">___</span></span></div>
+    <div class="area" data-m="7" data-n="18"></div>
+  </div>
+
+  <p class="prompt" style="margin:24px 0 10px">Draw an area model to represent the product. Record the product.</p>
+
+  <div class="q" data-id="2"><div class="qhead"><span class="num">2</span><span class="prompt">4 × 13 = <span class="total-show">___</span></span></div><div class="area" data-m="4" data-n="13"></div></div>
+  <div class="q" data-id="3"><div class="qhead"><span class="num">3</span><span class="prompt">5 × 14 = <span class="total-show">___</span></span></div><div class="area" data-m="5" data-n="14"></div></div>
+  <div class="q" data-id="4"><div class="qhead"><span class="num">4</span><span class="prompt">6 × 16 = <span class="total-show">___</span></span></div><div class="area" data-m="6" data-n="16"></div></div>
+  <div class="q" data-id="5"><div class="qhead"><span class="num">5</span><span class="prompt">2 × 15 = <span class="total-show">___</span></span></div><div class="area" data-m="2" data-n="15"></div></div>
+
+  <h2 class="section">Find the Product</h2>
+
+  <div class="q" data-id="6">
+    <div class="qhead"><span class="num">6</span><span class="prompt">7 × 17 = <input class="box" data-k="ans" inputmode="numeric" aria-label="Answer"></span></div>
+    <svg class="blocks" data-rows="7" data-ones="7"></svg>
+  </div>
+
+  <div class="q" data-id="7">
+    <div class="qhead"><span class="num">7</span><span class="prompt">3 × 14 = <input class="box" data-k="ans" inputmode="numeric" aria-label="Answer"></span></div>
+    <svg class="blocks" data-rows="3" data-ones="4"></svg>
+  </div>
+
+  <h2 class="section">Test Prep</h2>
+
+  <div class="q" data-id="8">
+    <div class="qhead"><span class="num">8</span><span class="prompt">Which is shown with the base-ten blocks?</span></div>
+    <svg id="q8pic" viewBox="0 0 200 250" width="200" style="display:block;margin:6px 0 12px"></svg>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="q8" value="A" data-k="choice"> A) 2 × 17</label>
+      <label class="opt"><input type="radio" name="q8" value="B" data-k="choice"> B) 1 × 17</label>
+      <label class="opt"><input type="radio" name="q8" value="C" data-k="choice"> C) 1 × 34</label>
+      <label class="opt"><input type="radio" name="q8" value="D" data-k="choice"> D) 2 + 17</label>
+    </div>
+  </div>
+
+  <div class="q" data-id="9">
+    <div class="qhead"><span class="num">9</span><span class="prompt">Which shows an area model for 3 × 16? <u>Select all</u> that apply.</span></div>
+    <div class="opts pics" id="q9opts"></div>
+  </div>
+
+  <div class="q" data-id="10">
+    <div class="qhead"><span class="num">10</span><span class="prompt">Find the product. &nbsp; 18 × 6 = <input class="box" data-k="ans" inputmode="numeric" aria-label="Answer"></span></div>
+  </div>
+
+  <h2 class="section">Spiral Review</h2>
+
+  <div class="q" data-id="11">
+    <div class="qhead"><span class="num">11</span><span class="prompt">Find the sum.</span></div>
+    <div class="add">&nbsp;&nbsp;319,587<br>+ 167,259<div class="rule"></div></div>
+    <div style="margin-top:6px"><input class="box wide" data-k="ans" inputmode="numeric" aria-label="Sum"></div>
+  </div>
+
+  <div class="q" data-id="12">
+    <div class="qhead"><span class="num">12</span><span class="prompt">Order 314,899, 341,998, and 314,989 from least to greatest.</span></div>
+    <div class="eq">
+      <select class="box" data-k="o1" aria-label="Least"></select> &lt;
+      <select class="box" data-k="o2" aria-label="Middle"></select> &lt;
+      <select class="box" data-k="o3" aria-label="Greatest"></select>
+    </div>
+  </div>
+
+  <h2 class="section">Turn In</h2>
+  <div class="turnin" id="turnin">
+    <p id="turnin-text">When you have finished every question, check your work. Then turn it in.<br><strong>You can only turn it in once.</strong></p>
+    <button class="go" id="go" type="button">Turn in my homework</button>
+    <div class="msg" id="msg"></div>
+    <div class="confirm" id="confirm">
+      <div id="confirm-text"></div>
+      <div class="btns">
+        <button class="yes" id="yes" type="button">Yes, turn it in</button>
+        <button class="no" id="no" type="button">No, go back</button>
+      </div>
+    </div>
+    <div id="results"></div>
+  </div>
+</main>
+<footer>Your answers save automatically on this device until you turn them in.</footer>
+
+<script>
+/* ===== TEACHER SETUP =====
+   Google Apps Script web app link (results go to your Google Sheet).        */
+var SHEET_URL  = 'https://script.google.com/macros/s/AKfycbzErVgsBCr9rPTjm2BgkHqhlG6HXufyAVZy4UGBQ3iv1aDcf8ZLGxAtjqknNYIJrz0UvA/exec';
+var ASSIGNMENT = 'Lesson 5.2 Homework';   // becomes the tab name in your Google Sheet
+/* ========================= */
+(function(){
+  var KEY = 'g4-hw-lesson-5-2-v2';
+  var state = null;
+  try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e) {}
+  if (!state || typeof state !== 'object') state = { name:'', vals:{}, submitted:false };
+  if (!state.vals) state.vals = {};
+
+  function V(id){ if(!state.vals[id]) state.vals[id] = {}; return state.vals[id]; }
+  function save(){
+    state.updated = new Date().toISOString();
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+  }
+  function num(s){
+    if (s === undefined || s === null) return NaN;
+    s = String(s).replace(/[,\s]/g,'');
+    return /^\d+$/.test(s) ? parseInt(s,10) : NaN;
+  }
+
+  /* ---------- Area model builder (Q1–5) ---------- */
+  var areas = {};
+  document.querySelectorAll('.area').forEach(function(el){
+    var card = el.closest('.q'), id = card.dataset.id;
+    var m = +el.dataset.m, n = +el.dataset.n;
+    var size = Math.min(26, Math.floor(820 / n));
+    el.innerHTML =
+      '<p class="tip">Click a square on the grid to split it into two parts.</p>' +
+      '<div class="grid" style="grid-template-columns:repeat('+n+',1fr);width:'+(n*size)+'px;max-width:100%"></div>' +
+      '<div class="eqs">' +
+        '<div class="eq"><span class="chip" style="background:var(--a-strong)"></span>'+m+' × <input class="box" data-k="p1" inputmode="numeric" aria-label="first part"> = <input class="box" data-k="pp1" inputmode="numeric" aria-label="first partial product"></div>' +
+        '<div class="eq"><span class="chip" style="background:var(--b-strong)"></span>'+m+' × <input class="box" data-k="p2" inputmode="numeric" aria-label="second part"> = <input class="box" data-k="pp2" inputmode="numeric" aria-label="second partial product"></div>' +
+        '<div class="eq"><strong>Product:</strong> '+m+' × '+n+' = <input class="box" data-k="total" inputmode="numeric" aria-label="product"></div>' +
+      '</div>';
+    var grid = el.querySelector('.grid'), cells = [];
+    for (var r=0;r<m;r++) for (var c=0;c<n;c++){
+      var d = document.createElement('div'); d.className='c'; d.dataset.col=c; grid.appendChild(d); cells.push(d);
+    }
+    function paint(){
+      var p1 = num(V(id).p1);
+      var split = (p1>0 && p1<n) ? p1 : 0;
+      cells.forEach(function(d){
+        var c = +d.dataset.col;
+        d.className = 'c' + (split ? (c < split ? ' a' : ' b') : '') + (split && c === split-1 ? ' split' : '');
+      });
+      var t = V(id).total;
+      card.querySelector('.total-show').textContent = (t && String(t).trim()) ? t : '___';
+    }
+    grid.addEventListener('click', function(e){
+      if (state.submitted) return;
+      var d = e.target.closest('.c'); if(!d) return;
+      var c = +d.dataset.col + 1; if (c >= n) c = n-1;
+      var v = V(id); v.p1 = String(c); v.p2 = String(n-c);
+      el.querySelector('[data-k=p1]').value = v.p1;
+      el.querySelector('[data-k=p2]').value = v.p2;
+      paint(); save();
+    });
+    areas[id] = {paint:paint, grid:grid};
+  });
+
+  /* ---------- Base-ten pictures (Q6, Q7) ---------- */
+  document.querySelectorAll('svg.blocks').forEach(function(svg){
+    var rows=+svg.dataset.rows, ones=+svg.dataset.ones, h=rows*22+4, s='';
+    for (var r=0;r<rows;r++){
+      var y=2+r*22;
+      for (var i=0;i<10;i++) s+='<rect x="'+(2+i*10)+'" y="'+y+'" width="10" height="14" fill="#dbeafe" stroke="#1e3a8a" stroke-width="1"/>';
+      for (var j=0;j<ones;j++) s+='<rect x="'+(122+j*18)+'" y="'+y+'" width="12" height="14" fill="#fde68a" stroke="#78350f" stroke-width="1"/>';
+    }
+    svg.setAttribute('viewBox','0 0 '+(126+ones*18)+' '+h);
+    svg.setAttribute('width', Math.min(420,(126+ones*18)*1.6));
+    svg.innerHTML = s;
+  });
+
+  /* ---------- Q8 picture: 2 groups of 1 ten + 7 ones ---------- */
+  (function(){
+    var s='';
+    [0,1].forEach(function(g){
+      var y0 = 4 + g*125;
+      for (var i=0;i<10;i++) s+='<rect x="4" y="'+(y0+i*11)+'" width="14" height="11" fill="#dbeafe" stroke="#1e3a8a"/>';
+      for (var j=0;j<7;j++) s+='<rect x="'+(28+j*22)+'" y="'+(y0+97)+'" width="13" height="13" fill="#fde68a" stroke="#78350f"/>';
+    });
+    document.getElementById('q8pic').innerHTML = s;
+  })();
+
+  /* ---------- Q9 option pictures ---------- */
+  (function(){
+    var opts = [
+      {k:'a', L:'A', h:3, w:[6,10]},
+      {k:'b', L:'B', h:3, w:[10,6]},
+      {k:'c', L:'C', h:6, w:[10,3]},
+      {k:'d', L:'D', h:3, w:[10,9]}
+    ];
+    var html='';
+    opts.forEach(function(o){
+      var total=o.w[0]+o.w[1], W=170, x=26, w1=Math.round(W*o.w[0]/total), H=o.h===6?80:56;
+      var svg='<svg viewBox="0 0 210 '+(H+30)+'" width="210">'+
+        '<text x="'+(x+w1/2)+'" y="16" text-anchor="middle" font-size="15" fill="#1f2a37">'+o.w[0]+'</text>'+
+        '<text x="'+(x+w1+(W-w1)/2)+'" y="16" text-anchor="middle" font-size="15" fill="#1f2a37">'+o.w[1]+'</text>'+
+        '<text x="12" y="'+(24+H/2+5)+'" text-anchor="middle" font-size="15" fill="#1f2a37">'+o.h+'</text>'+
+        '<rect x="'+x+'" y="24" width="'+w1+'" height="'+H+'" fill="#bfdbfe" stroke="#1f2a37" stroke-width="2"/>'+
+        '<rect x="'+(x+w1)+'" y="24" width="'+(W-w1)+'" height="'+H+'" fill="#fed7aa" stroke="#1f2a37" stroke-width="2"/></svg>';
+      html+='<label class="opt"><input type="checkbox" data-k="'+o.k+'"><strong>'+o.L+'</strong> '+svg+'</label>';
+    });
+    document.getElementById('q9opts').innerHTML = html;
+  })();
+
+  /* ---------- Q12 selects ---------- */
+  ['o1','o2','o3'].forEach(function(k){
+    var sel=document.querySelector('[data-id="12"] [data-k="'+k+'"]');
+    sel.innerHTML='<option value="">choose</option><option>314,899</option><option>341,998</option><option>314,989</option>';
+  });
+
+  /* ---------- Answer key (graded only when turned in) ---------- */
+  function area(m,n){
+    return function(v){
+      var p1=num(v.p1), p2=num(v.p2), a=num(v.pp1), b=num(v.pp2), t=num(v.total);
+      if ([p1,p2,a,b,t].some(isNaN)) return false;
+      return p1>0 && p2>0 && p1+p2===n && a===m*p1 && b===m*p2 && t===m*n;
+    };
+  }
+  function single(ans){ return function(v){ return num(v.ans)===ans; }; }
+  var key = {
+    1: area(7,18), 2: area(4,13), 3: area(5,14), 4: area(6,16), 5: area(2,15),
+    6: single(119), 7: single(42),
+    8: function(v){ return v.choice==='A'; },
+    9: function(v){ return !!v.a && !!v.b && !v.c && !v.d; },
+    10: single(108), 11: single(486846),
+    12: function(v){ return v.o1==='314,899' && v.o2==='314,989' && v.o3==='341,998'; }
+  };
+  var ids = Object.keys(key);
+
+  function answered(id){
+    var v = V(id);
+    return Object.keys(v).some(function(k){ var x=v[k]; return x===true || (typeof x==='string' && x.trim()!==''); });
+  }
+  function grade(){
+    var out = {}, score = 0;
+    ids.forEach(function(id){ var ok = key[id](V(id)); out[id] = ok; if (ok) score++; });
+    return {marks: out, score: score};
+  }
+
+  /* ---------- Send to teacher's Google Sheet ---------- */
+  function sendToTeacher(){
+    if (!/^https:\/\/script\.google\.com\//.test(SHEET_URL) || !state.submitted) return;
+    var g = state.result;
+    var payload = {
+      assignment: ASSIGNMENT, name: state.name.trim(), score: g.score, total: ids.length,
+      results: ids.map(function(id){ return { q:+id, correct: !!g.marks[id], tries: answered(id) ? 1 : 0 }; })
+    };
+    try {
+      fetch(SHEET_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload) })
+        .catch(function(){});
+    } catch(e) {}
+  }
+
+  /* ---------- Wiring inputs ---------- */
+  var nameEl = document.getElementById('name');
+  nameEl.value = state.name || '';
+  nameEl.addEventListener('input', function(){ if (state.submitted) return; state.name = nameEl.value; save(); });
+
+  document.querySelectorAll('.q[data-id]').forEach(function(card){
+    var id = card.dataset.id, v = V(id);
+    var mark = document.createElement('span'); mark.className='mark'; card.appendChild(mark);
+    card.querySelectorAll('[data-k]').forEach(function(el){
+      var k = el.dataset.k;
+      if (el.type==='checkbox') el.checked = !!v[k];
+      else if (el.type==='radio') el.checked = (v[k]===el.value);
+      else el.value = v[k] != null ? v[k] : '';
+      var ev = (el.tagName==='SELECT'||el.type==='checkbox'||el.type==='radio') ? 'change' : 'input';
+      el.addEventListener(ev, function(){
+        if (state.submitted) return;
+        if (el.type==='checkbox') V(id)[k] = el.checked;
+        else if (el.type==='radio') { if (el.checked) V(id)[k] = el.value; }
+        else V(id)[k] = el.value;
+        if (areas[id]) areas[id].paint();
+        save();
+      });
+    });
+    if (areas[id]) areas[id].paint();
+  });
+
+  /* ---------- Turn in ---------- */
+  var go = document.getElementById('go'), msg = document.getElementById('msg'),
+      confirmBox = document.getElementById('confirm'), confirmText = document.getElementById('confirm-text');
+
+  go.addEventListener('click', function(){
+    if (state.submitted) return;
+    msg.className='msg';
+    if (!state.name || !state.name.trim()){
+      msg.className='msg warn'; msg.textContent='Type your name at the top of the page first.';
+      nameEl.focus(); window.scrollTo({top:0, behavior:'smooth'}); return;
+    }
+    var blank = ids.filter(function(id){ return !answered(id); });
+    confirmText.innerHTML = blank.length
+      ? '<strong>You did not answer question'+(blank.length>1?'s ':' ')+blank.join(', ')+'.</strong><br>Blank questions will be marked wrong. Turn it in anyway?'
+      : '<strong>Are you sure you are finished?</strong><br>After you turn it in, you cannot change your answers.';
+    confirmBox.classList.add('show');
+  });
+  document.getElementById('no').addEventListener('click', function(){ confirmBox.classList.remove('show'); });
+  document.getElementById('yes').addEventListener('click', function(){
+    if (state.submitted) return;
+    state.result = grade();
+    state.submitted = true;
+    state.submittedAt = new Date().toISOString();
+    save();
+    sendToTeacher();
+    showFinal();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  function showFinal(){
+    var g = state.result;
+    confirmBox.classList.remove('show');
+    nameEl.disabled = true;
+    document.querySelectorAll('.q[data-id] input, .q[data-id] select').forEach(function(el){ el.disabled = true; });
+    Object.keys(areas).forEach(function(id){ areas[id].grid.classList.add('locked'); });
+    document.querySelectorAll('.q[data-id]').forEach(function(card){
+      var ok = !!g.marks[card.dataset.id];
+      card.classList.add(ok ? 'right' : 'wrong');
+      card.querySelector('.mark').textContent = ok ? '✓ Correct' : '✗ Incorrect';
+    });
+    var when = new Date(state.submittedAt).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'});
+    var banner = document.getElementById('banner');
+    banner.innerHTML = '<span class="big">'+g.score+' / '+ids.length+'</span>Turned in by '+escapeHtml(state.name)+' · '+when;
+    banner.classList.add('show');
+    var st = document.getElementById('status'); st.textContent = '✓ Turned in'; st.classList.add('done');
+    go.disabled = true; go.textContent = '✓ Turned in';
+    document.getElementById('turnin-text').innerHTML = 'Your homework has been turned in. Your teacher will go over it with you.';
+    var rows = ids.map(function(id){
+      return '<tr><td>Question '+id+'</td><td>'+(g.marks[id] ? '<span class="good">✓ Correct</span>' : '<span class="badc">✗ Incorrect</span>')+'</td></tr>';
+    }).join('');
+    document.getElementById('results').innerHTML =
+      '<table class="sum"><thead><tr><th>Question</th><th>Result</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  if (state.submitted && state.result){
+    showFinal();
+    sendToTeacher(); // re-send in case the first send failed (e.g., Wi-Fi dropped)
+  }
+})();
+</script>
+</body>
+</html>
